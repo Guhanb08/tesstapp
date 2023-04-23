@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Send Email using Amazon SES</title>
+  <script src="https://sdk.amazonaws.com/js/aws-sdk-2.1022.0.min.js"></script>
+</head>
+<body>
+  <h1>Send Email using Amazon SES</h1>
+  <form>
+    <label for="from">From:</label>
+    <input type="email" id="from" name="from" required value="admin@elits.in">
+    <br><br>
+    <label for="to">To:</label>
+    <input type="email" id="to" name="to" required value="guhanb1308@gmail.com">
+    <br><br>
+    <label for="subject">Subject:</label>
+    <input type="text" id="subject" name="subject" required value="test">
+    <br><br>
+    <label for="message">Message:</label>
+    <textarea id="message" name="message" required>sssssssssssss</textarea>
+    <br><br>
+    <input type="submit" value="Send Email" onclick="sendEmail(); return false;">
+  </form>
+  <script>
+    // Set the AWS region and credentials
+    AWS.config.update({
+        region: 'ap-south-1',
+      credentials: new AWS.Credentials('AKIAX3VN2M4C4DDV6EGM', 'IS6iTBKw8TluqG+eH2HEXnDuQFt80BR+/Vnek92F')
+    });
+
+    // Create a new instance of the Amazon SES service
+    var ses = new AWS.SES({apiVersion: '2010-12-01'});
+
+    // Function to send email
+    function sendEmail() {
+      // Get form values
+      var from = document.getElementById('from').value.trim();
+      var to = document.getElementById('to').value.trim();
+      var subject = document.getElementById('subject').value.trim();
+      var message = document.getElementById('message').value.trim();
+
+      // Set the email parameters
+      var params = {
+        Destination: {
+          ToAddresses: [to]
+        },
+        Message: {
+          Body: {
+            Text: {
+              Data: message
+            }
+          },
+          Subject: {
+            Data: subject
+          }
+        },
+        Source: from,
+        ReplyToAddresses: [from]
+      };
+
+      // Send the email
+      ses.sendEmail(params, function(err, data) {
+        if (err) {
+          alert('Error: ' + err.message);
+        } else {
+          alert('Email sent successfully!');
+        }
+      });
+    }
+  </script>
+</body>
+</html>
